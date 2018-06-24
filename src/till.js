@@ -1,6 +1,7 @@
 function Till (products, basket) {
   this.products = products;
   this.basket = basket;
+  this.transactions = [];
 };
 
 
@@ -24,6 +25,16 @@ Till.prototype.removeFromBasket = function (barcode) {
   const product = this.scan(barcode);
   const index = this.basket.indexOf(product);
   this.basket.splice(index, 1);
+};
+
+Till.prototype.closeSale = function () {
+  const transaction = {
+    total: this.totalPrice(),
+    products: this.basket
+  };
+
+  this.transactions.push(transaction);
+  this.basket = [];
 };
 
 module.exports = Till;

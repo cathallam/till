@@ -47,6 +47,10 @@ describe('constructor', () => {
   it('has initial basket array', () => {
     expect(till.basket).toEqual(expect.arrayContaining([]));
   });
+
+  it('has initial transactions array', () => {
+    expect(till.transactions).toEqual(expect.arrayContaining([]));
+  });
 });
 
 describe('scan', () => {
@@ -83,5 +87,26 @@ describe('removeFromBasket', () => {
     till.removeFromBasket(789);
   
     expect(till.basket).not.toContain(orange);
+  });
+});
+
+describe('closeSale', () => {
+  it('adds new transaction to transactions array', () => {
+    const basket = [kiwi, orange, pineapple];
+    const till = new Till(products, basket);
+  
+    till.closeSale();
+  
+    expect(till.transactions[0].total).toEqual(112);
+    expect(till.transactions[0].products).toEqual(expect.arrayContaining(basket));
+  });
+
+  it('empties the basket', () => {
+    const basket = [kiwi, orange, pineapple];
+    const till = new Till(products, basket);
+  
+    till.closeSale();
+
+    expect(till.basket).toEqual(expect.arrayContaining([]));
   });
 });
