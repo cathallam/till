@@ -1,9 +1,4 @@
-const {
-  addToBasket,
-  totalPrice,
-  scan,
-  removeFromBasket,
-} = require('../src/till');
+const Till = require('../src/till');
 
 const apple = {
   barcode: 123,
@@ -30,7 +25,7 @@ const kiwi = {
   price: 25,
 };
 
-const items = [
+const products = [
   apple,
   banana,
   orange,
@@ -38,28 +33,55 @@ const items = [
   kiwi, 
 ];
 
-test('scan finds an item by its barcode', () => {
-  expect(scan(456, items)).toEqual(banana);
+describe('constructor', () => {
+  const till = new Till(products, []);
+
+  it('returns an object', () => {
+    expect(till).toBeInstanceOf(Object);
+  });
+
+  it('has initial products array', () => {
+    expect(till.products).toEqual(expect.arrayContaining(products));
+  });
+
+  it('has initial basket array', () => {
+    expect(till.basket).toEqual(expect.arrayContaining([]));
+  });
 });
 
-test('addToBasket adds an item to the basket', () => {
-  const basket = [];
-
-  addToBasket(kiwi, basket);
-
-  expect(basket).toContain(kiwi);
+describe('scan', () => {
+  const till = new Till(products, []);
+  it('finds an item by its barcode', () => {
+    expect(till.scan(456)).toEqual(banana);
+  });
 });
 
-test('totalPrice gets the total price of items in the basket', () => {
-  const basket = [orange, orange, pineapple];
-
-  expect(totalPrice(basket)).toEqual(94);
+describe('addToBasket', () => {
+  it('adds an item to the basket', () => {
+    const till = new Till(products, []);
+  
+    till.addToBasket(kiwi);
+  
+    expect(till.basket).toContain(kiwi);
+  });
 });
 
-test('removeFromBasket removes the item with the given barcode from the basket', () => {
-  const basket = [kiwi, orange, pineapple];
+describe('totalPrice', () => {
+  it('gets the total price of items in the basket', () => {
+    const basket = [orange, orange, pineapple];
+    const till = new Till(products, basket);
+  
+    expect(till.totalPrice()).toEqual(94);
+  });
+});
 
-  removeFromBasket(789, basket);
-
-  expect(basket).not.toContain(orange);
+describe('removeFromBasket', () => {
+  it('removes the item with the given barcode from the basket', () => {
+    const basket = [kiwi, orange, pineapple];
+    const till = new Till(products, basket);
+  
+    till.removeFromBasket(789);
+  
+    expect(till.basket).not.toContain(orange);
+  });
 });
